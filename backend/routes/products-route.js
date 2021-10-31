@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { Product } = require('../models/product')
+const { Product } = require('../models/products')
+const { Category } = require('../models/categories')
 
 router.get(`/`, async (req, res) => {
     const productsList = await Product.find()
@@ -8,23 +9,48 @@ router.get(`/`, async (req, res) => {
     res.send(productsList)
 })
 
-router.post(`/`, (req, res) => {
-    const { name, image, countInStock } = req.body
-    const product = new Product({
+router.post(`/`, async (req, res) => {
+    // const { cetegory } = req.body.cetegory
+    console.log(JSON.stringify(req.body))
+    const {
         name,
+        description,
+        richDescription,
+        brand,
+        price,
+        category,
+        numReviews,
+        isFeatured,
         image,
         countInStock,
+        rating,
+    } = req.body
+
+    const cetegoryCheck = await Category.findById(category)
+    if (!cetegoryCheck)
+        return res
+            .status(400)
+            .json({ message: 'no such category exists', success: false })
+
+    const product = new Product({
+        name,
+        description,
+        richDescription,
+        brand,
+        price,
+        category,
+        numReviews,
+        isFeatured,
+        image,
+        countInStock,
+        rating,
     })
-    product
-        .save()
-        .then((productSuccessed) => {
-            res.status(201).json(productSuccessed)
-        })
-        .catch((error) => {
-            res.status(500).json({
-                error,
-                success: false,
-            })
-        })
+    const productSaveOperation = await product.save()
+    if (!productSaveOperation) {
+        return res
+            .status(500)
+            .json({ message: 'product cannot be added', success: false })
+    }
+    res.status(201).send(productSaveOperation)
 })
 module.exports = router

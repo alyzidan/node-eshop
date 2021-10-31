@@ -18,8 +18,38 @@ router.post('/', async (req, res) => {
     if (!categoryAction) res.status(404).json("ERROR DIDN'T complete")
     res.send(categoryAction)
 })
+router.put('/:id', async (req, res) => {
+    const { id } = req.params
+    const { name, icon, color } = req.body
+    const category = await Category.findByIdAndUpdate(
+        id,
+        {
+            name,
+            color,
+            icon,
+        },
+        {
+            new: true,
+        }
+    )
+    if (!category)
+        return res
+            .status(400)
+            .json({ message: 'operation could not be completed' })
+    return res.status(200).send(category)
+})
 
-// console.log('Messages Success')
+router.get('/:id', async (req, res) => {
+    const { id } = req.params
+    const category = await Category.findById(id)
+    if (!category) {
+        return res.status(500).json({
+            message:
+                'error finding given category , or no such category exists',
+        })
+    }
+    res.status(200).send(category)
+})
 
 router.delete('/:id', async (req, res) => {
     const { id } = req.params
