@@ -18,6 +18,7 @@ router.post('/', async (req, res) => {
     if (!categoryAction) res.status(404).json("ERROR DIDN'T complete")
     res.send(categoryAction)
 })
+
 router.put('/:id', async (req, res) => {
     const { id } = req.params
     const { name, icon, color } = req.body

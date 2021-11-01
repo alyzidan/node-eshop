@@ -10,8 +10,6 @@ router.get(`/`, async (req, res) => {
 })
 
 router.post(`/`, async (req, res) => {
-    // const { cetegory } = req.body.cetegory
-    console.log(JSON.stringify(req.body))
     const {
         name,
         description,
@@ -25,7 +23,6 @@ router.post(`/`, async (req, res) => {
         countInStock,
         rating,
     } = req.body
-
     const cetegoryCheck = await Category.findById(category)
     if (!cetegoryCheck)
         return res

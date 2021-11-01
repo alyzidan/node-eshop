@@ -1,0 +1,7 @@
+GET http://localhost:3333/api/v1/products  HTTP/1.1
+content-type: application/json
+
+{
+}
+
+###

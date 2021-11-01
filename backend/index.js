@@ -1,6 +1,7 @@
 const express = require('express')
 require('dotenv/config')
 require('./mongodb/index')
+const morganMiddleware = require('./middlewares/morgan')
 
 const app = express()
 const morgan = require('morgan')
@@ -9,6 +10,7 @@ const api = process.env.API_URL
 
 // Middleware
 app.use(express.json())
+app.use(morganMiddleware)
 app.use(morgan('tiny'))
 app.use(cors())
 app.options('*', cors())
