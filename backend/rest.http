@@ -1,7 +1,7 @@
 @hostname = localhost
-@port = 3333/
+@port = 3333
 @suffix = api/v1
-@fullPath = {{hostname}}:{{port}}{{suffix}}
+@fullPath = {{hostname}}:{{port}}/{{suffix}}
 
 
 GET http://{{fullPath}}/products  HTTP/1.1
@@ -10,7 +10,12 @@ GET http://{{fullPath}}/products  HTTP/1.1
 
 GET http://{{fullPath}}/categories  HTTP/1.1
 
-### 
+###
+
+
+DELETE  http://localhost:3333/api/v1/products/616596c0b0409de477109c17 HTTP/1.1
+
+###
 POST http://localhost:3333/api/v1/products HTTP/1.1
 content-type: application/json
 
@@ -27,8 +32,7 @@ content-type: application/json
     "countInStock":123,
     "rating":"3"
 }
-
-    ###
+###
 
 GET  http://{{fullPath}}/products/617e91460411e79322fc415e HTTP/1.1
 
