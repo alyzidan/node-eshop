@@ -8,6 +8,18 @@ const productSchema = mongoose.Schema({
         type: String,
         required: false,
     },
+    richDescription: {
+        type: String,
+        required: false,
+    },
+    brand: {
+        type: String,
+        required: false,
+    },
+    isFeatured: {
+        type: Boolean,
+        default: false,
+    },
     description: {
         type: String,
         default: '',
@@ -38,4 +50,12 @@ const productSchema = mongoose.Schema({
         max: 1000,
     },
 })
+
+productSchema.virtual('id').get(function () {
+    return this._id.toHexString()
+})
+productSchema.set('toJSON', {
+    virtuals: true,
+})
+
 exports.Product = mongoose.model('Product', productSchema)

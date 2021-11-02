@@ -5,6 +5,9 @@ const { Category } = require('../models/categories')
 const mongoose = require('mongoose')
 
 router.get(`/`, async (req, res) => {
+    // If request has paramenters convert them into an Array and Store in filters Object
+    let category = req.query.category?.split(',') || ''
+    let filters = { category }
     const productsList = await Product.find()
     // const productsList = await Product.find().select('name -_id')
     if (!productsList) return res.status(500).json({ success: false })
@@ -12,6 +15,9 @@ router.get(`/`, async (req, res) => {
 })
 router.delete('/:id', async (req, res) => {
     const { id } = req.params
+    if (!mongoose.isValidObjectId(id)) {
+        return res.status(400).send('Invalid Product id')
+    }
     try {
         const deleteProduct = await Product.findByIdAndRemove(id)
         return res.status(200).json({
@@ -53,7 +59,7 @@ router.put('/:id', async (req, res) => {
         rating,
     } = req.body
     if (!mongoose.isValidObjectId(id)) {
-        return req.status(400).send('Invalid Product id')
+        return res.status(400).send('Invalid Product id')
     }
     const categoryCheck = await Category.findById(category)
     if (!categoryCheck) return res.status(400).send('Invalid Category id')
@@ -126,4 +132,23 @@ router.post(`/`, async (req, res) => {
     }
     res.status(201).send(productSaveOperation)
 })
+router.get('/get/featured/:count', async (req, res) => {
+    const { count } = req.params || 2
+    const products = await Product.find({ isFeatured: true }).limit(+count)
+    if (!products) {
+        res.status(500).json({ success: false })
+    }
+    return res.send(products)
+})
+router.get('/get/count', async (req, res) => {
+    const productCount = await Product.countDocuments()
+    if (!productCount) {
+        res.status(500).json({
+            success: false,
+            message: 'Operation failed no count detected',
+        })
+    }
+    return res.status(200).send({ productCount })
+})
+
 module.exports = router
