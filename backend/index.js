@@ -17,9 +17,11 @@ app.options('*', cors())
 
 const productRoute = require('./routes/products-route')
 const categoriesRoute = require('./routes/categories-route')
+const usersRoute = require('./routes/users-route')
 
 app.use(`${api}/products`, productRoute)
 app.use(`${api}/categories`, categoriesRoute)
+app.use(`${api}/users`, usersRoute)
 // Routes
 
 app.listen(3333, () => {

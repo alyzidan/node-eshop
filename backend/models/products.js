@@ -50,7 +50,7 @@ const productSchema = mongoose.Schema({
         max: 1000,
     },
 })
-
+// computed the id value and return it with different key ==> 'id' instead of '_id'
 productSchema.virtual('id').get(function () {
     return this._id.toHexString()
 })
