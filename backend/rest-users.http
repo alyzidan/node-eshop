@@ -1,0 +1,31 @@
+@hostname = localhost
+@port = 3333
+@suffix = api/v1
+@fullPath = {{hostname}}:{{port}}/{{suffix}}
+
+
+GET http://{{fullPath}}/users  HTTP/1.1
+
+###
+
+POST http://{{fullPath}}/users HTTP/1.1
+content-type: application/json
+
+{
+    "name":"Zizo2",
+    "email":"Zizo@me2.com",
+    "passwordHash":"2222",
+    "street":"",
+    "apartment":"",
+    "city":"",
+    "zip":"",
+    "country":"",
+    "phone":"",
+    "isAdmin":false
+}
+    
+###
+
+GET  http://{{fullPath}}/products/617e91460411e79322fc415e HTTP/1.1
+
+###

@@ -1,0 +1,38 @@
+@hostname = localhost
+@port = 3333
+@suffix = api/v1
+@fullPath = {{hostname}}:{{port}}/{{suffix}}
+
+
+GET http://{{fullPath}}/products  HTTP/1.1
+
+###
+
+GET http://{{fullPath}}/products/get/count HTTP/1.1 
+
+###
+
+DELETE  http://localhost:3333/api/v1/products/61659a4297ecd1bb409a5427 HTTP/1.1
+
+###
+POST http://localhost:3333/api/v1/products HTTP/1.1
+content-type: application/json
+
+{
+    "name":"From Rest client2",
+    "description":"Ass 2n",
+    "richDescription":"adsasd ",
+    "brand":"asdas",
+    "category":"617e4a3b3e4a5251ab46b486",
+    "price":"223",
+    "numReviews":"213",
+    "isFeatured":true,
+    "image":"33.png",
+    "countInStock":123,
+    "rating":"3"
+}
+###
+
+GET  http://{{fullPath}}/products/617e91460411e79322fc415e HTTP/1.1
+
+###
