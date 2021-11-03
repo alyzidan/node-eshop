@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { User } = require('../models/users')
 const bcrybt = require('bcryptjs')
-
+const jwt = require('jsonwebtoken')
 router.get(`/`, async (req, res) => {
     const usersList = await User.find()
     if (!usersList) return res.status(500).json({ success: false })
@@ -46,9 +46,17 @@ router.post('/', async (req, res) => {
     }
     res.send(user)
 })
+
 //login user
 router.post('/login', async (req, res) => {
     const { email, password } = req.body
+    if (!email || !password) {
+        res.status(400).json({
+            success: false,
+            message: `both email and password are required for the login`,
+        })
+    }
+
     let loginOperation = await User.findOne({ email })
     if (!loginOperation) {
         return res.status(404).json({
@@ -60,10 +68,18 @@ router.post('/login', async (req, res) => {
         loginOperation &&
         bcrybt.compareSync(password, loginOperation.passwordHash)
     ) {
-        return res.status(200).send(loginOperation)
+        const { id, email } = loginOperation
+        const token = jwt.sign(
+            {
+                id,
+            },
+            'secret'
+        )
+        return res.status(200).send({ email, id, token })
     }
     res.status(400).send(`password is wrong`)
 })
+
 router.delete('/:id', async (req, res) => {
     const { id } = req.params
     if (!mongoose.isValidObjectId(id)) {
