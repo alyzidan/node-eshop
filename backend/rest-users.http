@@ -8,6 +8,10 @@ GET http://{{fullPath}}/users  HTTP/1.1
 
 ###
 
+GET http://{{fullPath}}/users/61824eb37b61692921579c6b  HTTP/1.1
+
+###
+
 POST http://{{fullPath}}/users HTTP/1.1
 content-type: application/json
 
@@ -24,8 +28,4 @@ content-type: application/json
     "isAdmin":false
 }
     
-###
-
-GET  http://{{fullPath}}/products/617e91460411e79322fc415e HTTP/1.1
-
 ###

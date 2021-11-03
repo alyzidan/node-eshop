@@ -1,13 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const { User } = require('../models/users')
-// const mongoose = require('mongoose')
+const bcrybt = require('bcryptjs')
 
 router.get(`/`, async (req, res) => {
     const usersList = await User.find()
     if (!usersList) return res.status(500).json({ success: false })
     res.status(200).send(usersList)
 })
+// register new user
 router.post('/', async (req, res) => {
     const {
         name,
@@ -21,10 +22,11 @@ router.post('/', async (req, res) => {
         phone,
         isAdmin,
     } = req.body
+
     let user = new User({
         name,
         email,
-        passwordHash,
+        passwordHash: bcrybt.hashSync(passwordHash),
         street,
         apartment,
         city,
@@ -33,7 +35,9 @@ router.post('/', async (req, res) => {
         phone,
         isAdmin,
     })
-    user = await user.save()
+    try {
+        user = await user.save()
+    } catch (error) {}
     if (!user) {
         res.status(404).json({
             success: false,
@@ -41,6 +45,24 @@ router.post('/', async (req, res) => {
         })
     }
     res.send(user)
+})
+//login user
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body
+    let loginOperation = await User.findOne({ email })
+    if (!loginOperation) {
+        return res.status(404).json({
+            success: false,
+            message: `couldn't find user with specfied email`,
+        })
+    }
+    if (
+        loginOperation &&
+        bcrybt.compareSync(password, loginOperation.passwordHash)
+    ) {
+        return res.status(200).send(loginOperation)
+    }
+    res.status(400).send(`password is wrong`)
 })
 router.delete('/:id', async (req, res) => {
     const { id } = req.params
@@ -61,15 +83,17 @@ router.delete('/:id', async (req, res) => {
         })
     }
 })
+
 router.get('/:id', async (req, res) => {
     const { id } = req.params
-    const product = await Product.findById(id).populate('category')
-    if (!product)
+    const user = await User.findById(id).select('name email phone')
+    if (!user) {
         return res.status(500).json({
-            message: 'could not find the requested product',
+            message: 'could not find the requested user',
             success: false,
         })
-    return res.status(200).send(product)
+    }
+    return res.status(200).send(user)
 })
 
 router.put('/:id', async (req, res) => {
