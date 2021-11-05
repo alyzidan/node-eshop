@@ -1,7 +1,7 @@
 # OS Files
 .DS_Store
 Thumbs.db
-
+.envs
 # Dependencies
 node_modules/
 

@@ -8,6 +8,7 @@ router.get(`/`, async (req, res) => {
     if (!usersList) return res.status(500).json({ success: false })
     res.status(200).send(usersList)
 })
+
 // register new user
 router.post('/', async (req, res) => {
     const {
