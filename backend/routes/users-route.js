@@ -51,6 +51,8 @@ router.post('/', async (req, res) => {
 //login user
 router.post('/login', async (req, res) => {
     const { email, password } = req.body
+    const secret = process.env.SECRET
+
     if (!email || !password) {
         res.status(400).json({
             success: false,
@@ -69,12 +71,14 @@ router.post('/login', async (req, res) => {
         loginOperation &&
         bcrybt.compareSync(password, loginOperation.passwordHash)
     ) {
-        const { id, email } = loginOperation
+        const { id, email, isAdmin } = loginOperation
         const token = jwt.sign(
             {
                 id,
+                isAdmin,
             },
-            'secret'
+            secret,
+            { expiresIn: '1d' }
         )
         return res.status(200).send({ email, id, token })
     }

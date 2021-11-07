@@ -2,7 +2,7 @@ const express = require('express')
 require('dotenv/config')
 require('./mongodb/index')
 const morganMiddleware = require('./middlewares/morgan')
-
+const authJwt = require('./helpers/jwt')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
@@ -12,6 +12,7 @@ const api = process.env.API_URL
 app.use(express.json())
 app.use(morganMiddleware)
 app.use(morgan('tiny'))
+app.use(authJwt())
 app.use(cors())
 app.options('*', cors())
 
