@@ -16,9 +16,9 @@ POST http://{{fullPath}}/users HTTP/1.1
 content-type: application/json
 
 {
-    "name":"Zizo2",
+    "name":"Adminuser",
     "email":"Zizo@me2.com",
-    "passwordHash":"2222",
+    "passwordHash":"asdasd",
     "street":"",
     "apartment":"",
     "city":"",
