@@ -2,10 +2,11 @@ const express = require('express')
 const router = express.Router()
 const { User } = require('../models/users')
 const { Product } = require('../models/products')
+const Orders = require('../models/orders')
 const mongoose = require('mongoose')
 // get all users
 router.get(`/`, async (_req, res) => {
-	const usersList = await User.find()
+	const usersList = await Orders.find()
 	if (!usersList) return res.status(500).json({ success: false })
 	res.status(200).send(usersList)
 })
