@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { User } = require('../models/users')
-const { Product } = require('../models/products')
-const Orders = require('../models/orders')
+const { User } = require('models/users')
+const { Product } = require('models/products')
+const Orders = require('models/orders')
 const mongoose = require('mongoose')
 // get all users
 router.get(`/`, async (_req, res) => {

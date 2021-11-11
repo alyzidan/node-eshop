@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { Product } = require('models/products')
-const { Category } = require('../models/categories')
+const { Category } = require('models/categories')
 const mongoose = require('mongoose')
 
 router.get(`/`, async (req, res) => {
