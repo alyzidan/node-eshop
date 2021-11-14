@@ -2,42 +2,59 @@ const express = require('express')
 const router = express.Router()
 const { User } = require('models/users')
 const { Product } = require('models/products')
-const Orders = require('models/orders')
+const { Order } = require('models/orders')
 const mongoose = require('mongoose')
+const { OrderItem } = require('../models/orders-items')
 // get all users
+
 router.get(`/`, async (_req, res) => {
-	const usersList = await Orders.find()
-	if (!usersList) return res.status(500).json({ success: false })
-	res.status(200).send(usersList)
+	const ordersList = await Order.find()
+	if (!ordersList) return res.status(500).json({ success: false, message: 'Filed to retrieve orders list' })
+	res.status(200).send(ordersList)
 })
 
-// // register new user
-// router.post('/', async (req, res) => {
-// 	const { name, email, passwordHash, street, apartment, city, zip, country, phone, isAdmin } = req.body
+// // register new order
+router.post('/', async (req, res) => {
+	const { city, zip, country, phone, totalPrice, user, orderItems, shippingAddress1, shippingAddress2, dateOrdered, dateCreated, status } = req.body
+	let orderItemsIds = Promise.all(
+		orderItems.map(async (orderItem) => {
+			let newOrderItem = new OrderItem({
+				quantity: orderItem.quantity,
+				product: orderItem.product,
+			})
+			newOrderItem = await newOrderItem.save()
+			return newOrderItem.id
+		})
+	)
+	const orderIdsREsolved = await orderItemsIds
 
-// 	let user = new User({
-// 		name,
-// 		email,
-// 		passwordHash: bcrybt.hashSync(passwordHash),
-// 		street,
-// 		apartment,
-// 		city,
-// 		zip,
-// 		country,
-// 		phone,
-// 		isAdmin,
-// 	})
-// 	try {
-// 		user = await user.save()
-// 	} catch (error) {}
-// 	if (!user) {
-// 		res.status(404).json({
-// 			success: false,
-// 			message: `adding user operation failed`,
-// 		})
-// 	}
-// 	res.send(user)
-// })
+	let orders = new Order({
+		city,
+		zip,
+		country,
+		phone,
+		totalPrice,
+		user,
+		orderItems: orderIdsREsolved,
+		shippingAddress1,
+		shippingAddress2,
+		dateOrdered,
+		dateCreated,
+		status,
+	})
+	try {
+		orders = await orders.save()
+	} catch (error) {
+		console.log('ERROR ADDING New Concept', error)
+	}
+	if (!orders) {
+		res.status(404).json({
+			success: false,
+			message: `adding user operation failed`,
+		})
+	}
+	res.send(orders)
+})
 // //login user
 // router.post('/login', async (req, res) => {
 // 	const { email, password } = req.body
@@ -71,6 +88,7 @@ router.get(`/`, async (_req, res) => {
 // 	}
 // 	res.status(400).send(`password is wrong`)
 // })
+
 // //delete user
 // router.delete('/:id', async (req, res) => {
 // 	const { id } = req.params
@@ -212,4 +230,4 @@ router.get(`/`, async (_req, res) => {
 // 	return res.status(200).send({ productCount })
 // })
 
-// module.exports = router
+module.exports = router

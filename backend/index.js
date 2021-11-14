@@ -21,12 +21,14 @@ app.options('*', cors())
 const productRoute = require('./routes/products-route')
 const categoriesRoute = require('./routes/categories-route')
 const usersRoute = require('./routes/users-route')
+const ordersRoute = require('./routes/orders-route')
 
 app.use(`${api}/products`, productRoute)
 app.use(`${api}/categories`, categoriesRoute)
 app.use(`${api}/users`, usersRoute)
+app.use(`${api}/orders`, ordersRoute)
 // Routes
 
 app.listen(3333, () => {
-    console.log('connected')
+	console.log('connected')
 })

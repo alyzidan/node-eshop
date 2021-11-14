@@ -60,5 +60,5 @@ orderSchema.set('toJSON', {
 	virtuals: true,
 })
 
-exports.order = mongoose.model('User', orderSchema)
+exports.Order = mongoose.model('Order', orderSchema)
 exports.orderSchema = orderSchema
